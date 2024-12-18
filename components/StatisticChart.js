@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -21,9 +21,13 @@ ChartJS.register(
   Legend
 );
 
-const AccurateVsInaccurateChart = ({
-  lineWidth = 3,
-}) => {
+const AccurateVsInaccurateChart = ({ lineWidth = 3 }) => {
+  const chartContainerRef = useRef(null);
+  const [chartDimensions, setChartDimensions] = useState({
+    width: "100%",
+    height: "100%",
+  });
+
   // Sample data
   const accurateData = [10, 20, 30, 40, 100, 60, 70, 150, 200];
   const inaccurateData = [0, 20, 0, 0, 0, 0, 10, 20, 50];
@@ -53,7 +57,7 @@ const AccurateVsInaccurateChart = ({
   };
 
   const options = {
-    responsive: false,
+    responsive: true,
     maintainAspectRatio: false,
     scales: {
       x: {
@@ -63,12 +67,12 @@ const AccurateVsInaccurateChart = ({
         beginAtZero: true,
         max: 200,
         grid: {
-          color: "#fff", // Lighter grid lines
+          color: "#fff",
         },
         ticks: {
           stepSize: 50,
           callback: (value) => value,
-          color: '#ffffff', // Set y-axis text color to white
+          color: "#ffffff",
         },
       },
     },
@@ -76,27 +80,61 @@ const AccurateVsInaccurateChart = ({
       title: {
         display: true,
         text: "Accurate vs Inaccurate Predictions",
-        color: '#ffffff', // Optional: also set title color to white if desired
+        color: "#ffffff",
         font: {
           size: 18,
           weight: "bold",
         },
       },
       legend: {
-        position: "bottom",
+        position: "right",
         labels: {
-          color: '#ffffff', // Optional: set legend text to white
+          color: "#ffffff",
           font: {
-            size: 14,
+            size: 10,
           },
+          usePointStyle: true,
+          pointStyle: "circle",
         },
       },
     },
   };
 
+  // Update chart dimensions based on parent container
+  useEffect(() => {
+    const updateChartSize = () => {
+      if (chartContainerRef.current) {
+        const { width, height } =
+          chartContainerRef.current.getBoundingClientRect();
+        setChartDimensions({
+          width: width || "100%",
+          height: height || "100%",
+        });
+      }
+    };
+
+    // Initial size update
+    updateChartSize();
+
+    // Add resize listener
+    window.addEventListener("resize", updateChartSize);
+
+    // Cleanup listener
+    return () => window.removeEventListener("resize", updateChartSize);
+  }, []);
+
   return (
-    <div className="w-[500px]">
-      <Line data={data} options={options} width={'500px'} height={'200px'} />
+    <div ref={chartContainerRef} className="w-full h-full">
+      <Line
+        data={data}
+        options={options}
+        style={{
+          maxWidth: "100%",
+          maxHeight: "100%",
+          width: chartDimensions.width,
+          height: chartDimensions.height,
+        }}
+      />
     </div>
   );
 };

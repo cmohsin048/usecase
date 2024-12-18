@@ -1,6 +1,7 @@
-// StatisticsPanel Component (Separate File)
 import React from "react";
-import AccurateVsInaccurateChart from '../StatisticChart'
+import StatisticChart from "../StatisticChart";
+import AccurateVsInaccurateChart from "../StackedBarChart";
+
 export default function StatisticsPanel() {
   const statistics = {
     totalData: 576,
@@ -10,40 +11,48 @@ export default function StatisticsPanel() {
     normal: 142,
   };
 
+  // Prepare data for the AccurateVsInaccurateChart
+  const chartData = [
+    { name: "Normal", value: statistics.normal },
+    { name: "Rogue", value: statistics.rogue },
+    { name: "Uncategorized", value: statistics.inaccurate },
+  ];
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex flex-col gap-2">
+      <p className="geologica-bold">STATISTIC PANEL</p>
       <div>
-        <h2 className="text-lg font-bold">
-          Accurate vs Inaccurate Predictions
-        </h2>
-        <div className="w-full h-70 bg-gray-700 flex items-center justify-center p-5">
-          {/* Replace with chart logic */}
-          {/* <StatisticChart/> */}
-          <AccurateVsInaccurateChart />
+        <div className="w-full bg-[#5d5d5c] flex flex-col items-center justify-center p-5 shadow-[0px_0px_15px_rgba(0,0,0,0.5)]">
+          <StatisticChart />
         </div>
       </div>
-      <div>
+      <div className="bg-[#5d5d5c] shadow-[0px_0px_15px_rgba(0,0,0,0.5)] p-4 rounded">
         <h2 className="text-lg font-bold">Total Data Categorized</h2>
         <p className="text-4xl font-bold mt-2">{statistics.totalData}</p>
+        <AccurateVsInaccurateChart data={chartData} />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-gray-700 p-4 rounded">
-          <h3 className="text-sm">Total Accurate Predictions</h3>
-          <p className="text-2xl font-bold">{statistics.accurate}</p>
+      <div className="grid grid-cols-2 gap-2">
+        <div className="bg-[#5d5d5c] p-2 rounded shadow-[0px_0px_15px_rgba(0,0,0,0.5)]">
+          <h3 className="geologica-extrabold name">
+            Total Accurate Predictions
+          </h3>
+          <p className="geologica-extrabold val">{statistics.accurate}</p>
         </div>
-        <div className="bg-gray-700 p-4 rounded">
-          <h3 className="text-sm">Total Inaccurate Predictions</h3>
-          <p className="text-2xl font-bold">{statistics.inaccurate}</p>
+        <div className="bg-[#5d5d5c] p-2 rounded shadow-[0px_0px_15px_rgba(0,0,0,0.5)]">
+          <h3 className="geologica-extrabold name">
+            Total Inaccurate Predictions
+          </h3>
+          <p className="geologica-extrabold val">{statistics.inaccurate}</p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-gray-700 p-4 rounded">
-          <h3 className="text-sm">Total Rogue Anomalies</h3>
-          <p className="text-2xl font-bold">{statistics.rogue}</p>
+      <div className="grid grid-cols-2 gap-2">
+        <div className="bg-[#5d5d5c] p-2 rounded shadow-[0px_0px_15px_rgba(0,0,0,0.5)]">
+          <h3 className="geologica-extrabold name">Total Rogue Anomalies</h3>
+          <p className="geologica-extrabold val">{statistics.rogue}</p>
         </div>
-        <div className="bg-gray-700 p-4 rounded">
-          <h3 className="text-sm">Total Normal Predictions</h3>
-          <p className="text-2xl font-bold">{statistics.normal}</p>
+        <div className="bg-[#5d5d5c] p-2 rounded shadow-[0px_0px_15px_rgba(0,0,0,0.5)]">
+          <h3 className="geologica-extrabold name">Total Normal Predictions</h3>
+          <p className="geologica-extrabold val">{statistics.normal}</p>
         </div>
       </div>
     </div>

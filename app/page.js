@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="bg-black h-[100vh] w-full text-white flex">
+    <div className="bg-black h-[100vh] w-full text-white flex overflow-auto">
       {/* Left Section */}
       <div className="w-2/3 p-6 flex flex-col justify-between">
         <div>
@@ -35,7 +35,7 @@ export default function Home() {
       </div>
 
       {/* Right Section */}
-      <div className="w-1/3 bg-gray-800 p-6">
+      <div className="w-1/3 bg-[#333333] px-6 pt-6 h-full">
         <StatisticsPanel />
       </div>
     </div>
@@ -95,9 +95,6 @@ function SampleDataTable() {
   );
 }
 
-
-
-
 function Classifications() {
   const classifications = [
     {
@@ -129,21 +126,19 @@ function Classifications() {
           <div className="flex items-center gap-2 bg-[#3b2323] text-[#f28c82] py-2 px-4 rounded-full w-fit shadow-lg">
             {/* Warning Icon */}
             <div className="w-7 h-7 flex items-center justify-center">
-              <Image
-                src="/warning.svg"
-                alt="warning"
-                width={20}
-                height={20}
-              />
+              <Image src="/warning.svg" alt="warning" width={20} height={20} />
             </div>
             <p className="font-bold">{item.type}</p>
           </div>
           <div className="mt-4 text-gray-300 space-y-3">
             {item.message.map((field, idx) => (
               <p key={idx}>
-                <span className="geologica-medium text-white">{field.label}:</span>
-                <span className="geologica-thin text-white">{field.description}</span>
-                
+                <span className="geologica-medium text-white">
+                  {field.label}:
+                </span>
+                <span className="geologica-thin text-white">
+                  {field.description}
+                </span>
               </p>
             ))}
           </div>
@@ -152,7 +147,3 @@ function Classifications() {
     </div>
   );
 }
-
-
-
-

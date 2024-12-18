@@ -21,9 +21,20 @@ const UserSchema = new mongoose.Schema({
     type: String, // Stores Base64 image as a string
     default: null, // Optional, default is null
   },
+  otp: {
+    code: {
+      type: String,
+      default: null,
+    },
+    expiresAt: {
+      type: Date,
+      default: null,
+    },
+  },
 });
 
 // Prevent model overwrite
-const User = mongoose.models.usecaseUser || mongoose.model("usecaseUser", UserSchema);
+const User =
+  mongoose.models.usecaseUser || mongoose.model("usecaseUser", UserSchema);
 
 export default User;
