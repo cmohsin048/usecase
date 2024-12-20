@@ -14,7 +14,7 @@ export const POST = async (req) => {
     // Parse the JSON manually
     const { fullName, email, password } = JSON.parse(rawBody);
 
-    console.log("Parsed Data:", { fullName, email, password });
+    // console.log("Parsed Data:", { fullName, email, password });
 
     // Rest of your existing registration logic...
     if (!fullName || !email || !password) {

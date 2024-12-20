@@ -1,13 +1,12 @@
-// layout.js
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Provider } from "react-redux";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "../components/Sidebar";
 import store from "../store";
-import { setLoggedIn, setLoggedOut } from '../Reducer/AuthSlice';
+import { setLoggedIn, setLoggedOut } from "../Reducer/AuthSlice";
 import "./globals.css";
 
 function RootLayoutContent({ children }) {
@@ -19,7 +18,7 @@ function RootLayoutContent({ children }) {
 
   useEffect(() => {
     // Check session storage for login status
-    const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
 
     if (loggedIn) {
       dispatch(setLoggedIn());
@@ -27,51 +26,49 @@ function RootLayoutContent({ children }) {
       dispatch(setLoggedOut());
     }
 
-    // Mark authentication check as complete
-    setAuthChecked(true);
+    setAuthChecked(true); // Mark authentication check as complete
   }, [dispatch]);
 
   useEffect(() => {
     if (!authChecked) return; // Wait until auth check is complete
 
-    const protectedRoutes = ['/'];
-    const publicRoutes = ['/login', '/register'];
+    const publicRoutes = ["/login", "/Register"];
 
-    // Redirect to login if not logged in and trying to access a protected route
-    if (!isLoggedIn && protectedRoutes.includes(pathname)) {
+    if (!isLoggedIn && !publicRoutes.includes(pathname)) {
+      // Redirect unauthenticated users to /login
       router.replace("/login");
-      return;
-    }
-
-    // Redirect to home if logged in and trying to access a public route
-    if (isLoggedIn && publicRoutes.includes(pathname)) {
+    } else if (isLoggedIn && publicRoutes.includes(pathname)) {
+      // Redirect authenticated users away from public routes
       router.replace("/");
-      return;
     }
   }, [isLoggedIn, pathname, router, authChecked]);
 
-  if (!authChecked) {
-    return <div>Loading...</div>; // Render a loading state while checking auth
+  // Prevent rendering until auth status is checked
+  if (
+    !authChecked ||
+    (!isLoggedIn && pathname !== "/login" && pathname !== "/Register")
+  ) {
+    return <div>Loading...</div>; // Show a loading state until redirection logic is resolved
   }
 
-  const showSidebar = isLoggedIn && !["/login", "/register"].includes(pathname);
+  const showSidebar = isLoggedIn && !["/login", "/Register"].includes(pathname);
 
   return (
-    <html lang="en">
-      <body>
-        <div className="flex">
-          {showSidebar && <Sidebar />}
-          <main className="flex-grow">{children}</main>
-        </div>
-      </body>
-    </html>
+    <div className="flex">
+      {showSidebar && <Sidebar />}
+      <main className="flex-grow">{children}</main>
+    </div>
   );
 }
 
 export default function RootLayout({ children }) {
   return (
-    <Provider store={store}>
-      <RootLayoutContent>{children}</RootLayoutContent>
-    </Provider>
+    <html lang="en">
+      <body>
+        <Provider store={store}>
+          <RootLayoutContent>{children}</RootLayoutContent>
+        </Provider>
+      </body>
+    </html>
   );
 }

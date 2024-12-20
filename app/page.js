@@ -2,19 +2,19 @@
 
 import React from "react";
 import StatisticsPanel from "../components/dashboard/StatisticPanel";
-
+import SampleData from "../components/SampleData";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
-
 export default function Home() {
   return (
     <div className="bg-black h-[100vh] w-full text-white flex overflow-auto">
+      <ToastContainer theme="dark" />
+
       {/* Left Section */}
       <div className="w-2/3 p-6 flex flex-col justify-between">
         <div>
-          <div>
-            <h1 className="geologica-bold mb-4">SAMPLE DATA</h1>
-            <SampleDataTable />
-          </div>
+          <SampleData />
           <div>
             <h1 className="geologica-bold mt-8 mb-4">CLASSIFICATIONS</h1>
             <Classifications />
@@ -24,10 +24,10 @@ export default function Home() {
         <div className="mt-8">
           <h1 className="geologica-bold">ANOMALY FEEDBACK</h1>
           <div className="flex gap-[1px] mt-4">
-            <button className="px-6 py-4 bg-[#ffffff] text-[#090909] rounded-sm">
+            <button className="px-6 py-4 bg-[#ffffff] text-[#090909] hover:bg-[#9EECD2] rounded-sm">
               Yes
             </button>
-            <button className="px-6 py-4 bg-[#ffffff] text-[#090909] rounded-sm">
+            <button className="px-6 py-4 bg-[#ffffff] text-[#090909] hover:bg-[#9EECD2] rounded-sm">
               No
             </button>
           </div>
@@ -42,59 +42,7 @@ export default function Home() {
   );
 }
 
-// SampleDataTable Component
-function SampleDataTable() {
-  const data = [
-    {
-      Age: 50,
-      Sex: 0,
-      CP: 4,
-      Trestbps: 300,
-      Chol: 700,
-      FBS: 1,
-      Restecg: 2,
-      Thalach: 90,
-    },
-  ];
-
-  return (
-    <table className="table-auto w-full text-center border border-gray-600">
-      <thead>
-        <tr className="bg-[#71C4ED]">
-          <th className="border border-gray-600 p-2">Age</th>
-          <th className="border border-gray-600 p-2">Sex</th>
-          <th className="border border-gray-600 p-2">CP</th>
-          <th className="border border-gray-600 p-2">Trestbps</th>
-          <th className="border border-gray-600 p-2">Chol</th>
-          <th className="border border-gray-600 p-2">FBS</th>
-          <th className="border border-gray-600 p-2">Restecg</th>
-          <th className="border border-gray-600 p-2">Thalach</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, index) => (
-          <tr key={index}>
-            {Object.entries(row).map(([key, value], i) => (
-              <td
-                key={i}
-                className={`border border-gray-600 p-2 ${
-                  (key === "CP" && value > 3) ||
-                  (key === "Trestbps" && value > 200) ||
-                  (key === "Chol" && value > 300)
-                    ? "text-red-500"
-                    : "text-white"
-                }`}
-              >
-                {value}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
+// Classifications Component (unchanged)
 function Classifications() {
   const classifications = [
     {
@@ -126,7 +74,14 @@ function Classifications() {
           <div className="flex items-center gap-2 bg-[#3b2323] text-[#f28c82] py-2 px-4 rounded-full w-fit shadow-lg">
             {/* Warning Icon */}
             <div className="w-7 h-7 flex items-center justify-center">
-              <Image src="/warning.svg" alt="warning" width={20} height={20} />
+              <Image
+                src="/warning.svg"
+                alt="warning"
+                width={0}
+                height={0}
+                className="w-5 h-5" // This sets both width and height using Tailwind
+                style={{ width: "20px", height: "20px" }} // Or use specific dimensions
+              />
             </div>
             <p className="font-bold">{item.type}</p>
           </div>
