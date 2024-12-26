@@ -31,6 +31,27 @@ const UserSchema = new mongoose.Schema({
       default: null,
     },
   },
+  systemSettings: {
+    isAutomated: {
+      type: Boolean,
+      default: true,
+    },
+    classificationRate: {
+      type: String,
+      enum: [
+        "every-second",
+        "every-5-seconds",
+        "every-minute",
+        "every-5-minutes",
+        "every-hour",
+      ],
+      default: "every-second",
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
 });
 
 // Prevent model overwrite

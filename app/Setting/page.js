@@ -1,15 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Info } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function SystemSettings() {
   const [isAutomated, setIsAutomated] = useState(true);
   const [classificationRate, setClassificationRate] = useState("every-second");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/setting", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isAutomated,
+          classificationRate,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update settings");
+      }
+
+      toast.success("Settings updated successfully", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } catch (error) {
+      console.error("Error updating settings:", error);
+      toast.error("Failed to update settings", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,9 +131,10 @@ export default function SystemSettings() {
 
           <button
             type="submit"
-            className="mt-12 px-6 py-3 bg-[#71C4ED] text-white font-semibold rounded hover:bg-[#5DB1DA] transition-colors"
+            disabled={isLoading}
+            className="mt-12 px-6 py-3 bg-[#71C4ED] text-black font-semibold rounded hover:bg-[#5DB1DA] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            SAVE CHANGES
+            {isLoading ? "SAVING..." : "SAVE CHANGES"}
           </button>
         </form>
       </div>
